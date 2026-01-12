@@ -34,7 +34,7 @@ jobs:
           REMOTE_HOST: "38.165.45.74"
           REMOTE_USER: "root"
           TARGET: "/var/www/quartz"
-          SSH_PORT: "2222" # 显式指定你的安全端口
+          PORT: "2222" # 显式指定你的安全端口
           SCRIPT_AFTER: |
             chown -R www-data:www-data /var/www/quartz
             chmod -R 755 /var/www/quartz
