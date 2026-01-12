@@ -1,40 +1,13 @@
-name: Deploy Quartz to VPS
-on:
-  push:
-    branches: [ v4 ] # 保持你的分支名
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Quartz 需要完整的 Git 历史来生成文章修改日期
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24 # 匹配你本地的最新版本
-          cache: 'npm'    # 优化点 1：开启 npm 缓存，加快后续构建速度
-
-      - name: Install Dependencies
-        run: npm ci       # 优化点 2：使用 npm ci 代替 install，在 CI 环境中更快速、稳定
-
-      - name: Build Quartz
-        run: npx quartz build
-
-      - name: Deploy to Optimization Chicken
+- name: Deploy to Optimization Chicken
         uses: easingthemes/ssh-deploy@main
-        with:
-          # 优化点 3：建议将 IP 和 端口也存入 Secret，提高安全性
+        env:  # <--- 这里必须是 env: ！！！
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-avz --delete --no-perms --no-owner --no-group" # 优化点 4：忽略服务器权限冲突
+          ARGS: "-avz --delete --no-perms --no-owner --no-group"
           SOURCE: "public/"
           REMOTE_HOST: "38.165.45.74"
           REMOTE_USER: "root"
           TARGET: "/var/www/quartz"
-          PORT: "2222" # 显式指定你的安全端口
+          PORT: "2222" # 指定你的安全端口
           SCRIPT_AFTER: |
             chown -R www-data:www-data /var/www/quartz
             chmod -R 755 /var/www/quartz
