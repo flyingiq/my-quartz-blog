@@ -1,4 +1,4 @@
-﻿name: Deploy Quartz to VPS
+name: Deploy Quartz to VPS
 on:
   push:
     branches: [ v4 ]
