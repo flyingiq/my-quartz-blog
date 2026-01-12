@@ -1,0 +1,32 @@
+name: Deploy Quartz to VPS
+on:
+  push:
+    branches: [ v4 ] # 注意你的分支名是 v4
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install and Build
+        run: |
+          npm install
+          npx quartz build
+
+      - name: Copy to Optimization Chicken
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-avz --delete"
+          SOURCE: "public/"
+          REMOTE_HOST: "38.165.45.74"
+          REMOTE_USER: "root"
+          TARGET: "/var/www/quartz" # 确保你在 VPS 上建了这个目录
