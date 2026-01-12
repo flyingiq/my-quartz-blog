@@ -30,3 +30,4 @@ jobs:
           REMOTE_HOST: "38.165.45.74"
           REMOTE_USER: "root"
           TARGET: "/var/www/quartz" # 确保你在 VPS 上建了这个目录
+          SSH_PORT: "2222"
